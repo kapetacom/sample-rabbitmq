@@ -1,0 +1,55 @@
+kind: core/plan
+metadata:
+  name: kapeta/rabbit-demo
+  visibility: private
+  description: ""
+  structure: mono
+  title: Rabbit Demo
+spec:
+  blocks:
+    - block:
+        ref: kapeta://kapeta/rabbitmq-demo-mq:local
+      dimensions:
+        height: -1
+        width: 150
+        left: 846
+        top: 261
+      id: 5abdd114-8dec-4b73-8191-eb47cffe8b9b
+      name: Queue
+    - block:
+        ref: kapeta://kapeta/rabbit-demo-producer:local
+      dimensions:
+        height: -1
+        width: 150
+        left: 439
+        top: 262.5
+      id: d4470e6c-32e9-43fb-92c2-9f82f34ba6fe
+      name: Producer
+    - block:
+        ref: kapeta://kapeta/rabbit-demo-consumer:local
+      dimensions:
+        height: -1
+        width: 150
+        left: 1194.5
+        top: 261.25
+      id: 8579705f-be11-40f5-919f-1d71957bb479
+      name: Consumer
+  connections:
+    - provider:
+        resourceName: events
+        blockId: d4470e6c-32e9-43fb-92c2-9f82f34ba6fe
+      consumer:
+        resourceName: events
+        blockId: 5abdd114-8dec-4b73-8191-eb47cffe8b9b
+      port:
+        name: amqp
+        type: amqp
+    - provider:
+        resourceName: events
+        blockId: 5abdd114-8dec-4b73-8191-eb47cffe8b9b
+      consumer:
+        resourceName: events
+        blockId: 8579705f-be11-40f5-919f-1d71957bb479
+      port:
+        name: amqp
+        type: amqp

@@ -1,0 +1,70 @@
+kind: kapeta/block-type-service:1.3.6
+metadata:
+  name: kapeta/rabbit-demo-producer
+  visibility: private
+spec:
+  entities:
+    types:
+      - type: dto
+        name: Event
+        properties:
+          title:
+            type: string
+            secret: false
+            required: true
+            global: false
+          message:
+            type: string
+            secret: false
+            required: true
+            global: false
+          created:
+            type: date
+            secret: false
+            required: true
+            global: false
+    source:
+      type: kaplang
+      version: 1.11.3
+      value: |-
+        type Event {
+            title: string
+            message: string
+            created: date
+        }
+  providers:
+    - kind: kapeta/resource-type-rabbitmq-publisher:0.1.0
+      metadata:
+        name: events
+      spec:
+        port:
+          name: amqp
+          type: amqp
+        routeKeys:
+          data: []
+        headers:
+          data: []
+        payloadType:
+          type: Event
+          structure:
+            type: dto
+            name: Event
+            properties:
+              title:
+                type: string
+                secret: false
+                required: true
+                global: false
+              message:
+                type: string
+                secret: false
+                required: true
+                global: false
+              created:
+                type: date
+                secret: false
+                required: true
+                global: false
+  consumers: []
+  target:
+    kind: kapeta/language-target-nodejs:3.3.1

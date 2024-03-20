@@ -1,0 +1,102 @@
+kind: kapeta/block-type-rabbitmq:0.1.0
+metadata:
+  name: kapeta/rabbitmq-demo-mq
+  visibility: private
+spec:
+  entities:
+    types:
+      - type: dto
+        name: Event
+        properties:
+          title:
+            type: string
+            secret: false
+            required: true
+            global: false
+          message:
+            type: string
+            secret: false
+            required: true
+            global: false
+          created:
+            type: date
+            secret: false
+            required: true
+            global: false
+    source:
+      type: kaplang
+      version: 1.11.3
+      value: |-
+        type Event {
+            title: string
+            message: string
+            created: date
+        }
+  providers:
+    - kind: kapeta/resource-type-rabbitmq-queue:0.1.0
+      metadata:
+        name: events
+      spec:
+        port:
+          name: amqp
+          type: amqp
+        payloadType:
+          type: Event
+          structure:
+            type: dto
+            name: Event
+            properties:
+              title:
+                type: string
+                secret: false
+                required: true
+                global: false
+              message:
+                type: string
+                secret: false
+                required: true
+                global: false
+              created:
+                type: date
+                secret: false
+                required: true
+                global: false
+        durable: true
+  consumers:
+    - kind: kapeta/resource-type-rabbitmq-exchange:0.1.0
+      metadata:
+        name: events
+      spec:
+        port:
+          name: amqp
+          type: amqp
+        payloadType:
+          type: Event
+          structure:
+            type: dto
+            name: Event
+            properties:
+              title:
+                type: string
+                secret: false
+                required: true
+                global: false
+              message:
+                type: string
+                secret: false
+                required: true
+                global: false
+              created:
+                type: date
+                secret: false
+                required: true
+                global: false
+        exchangeType: direct
+        durable: true
+  bindings:
+    exchanges:
+      - exchange: events
+        bindings:
+          - name: events
+            type: queue
+            routing: ""
